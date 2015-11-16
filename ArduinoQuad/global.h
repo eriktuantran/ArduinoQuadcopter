@@ -10,6 +10,7 @@
 #define GLOBAL_H_
 
 #define OUT_GRAPH
+#define OUT_RX
 
 #define ON		1
 #define OFF		0
@@ -30,7 +31,7 @@
 #define PWM_RC_MID		1404
 #define PWM_RC_MAX		2100
 #define THR_CUTOFF		3
-#define RX_THR_PIN		8
+#define RX_THR_PIN		21
 #define RX_AIL_PIN		2
 #define RX_ELE_PIN		0
 #define RX_RUD_PIN		23

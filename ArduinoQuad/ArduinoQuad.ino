@@ -86,6 +86,7 @@ void armingLoop()
 }
 
 void setup() {
+	Serial.begin(115200);
 	Serial1.begin(115200);
 	LED_DIR=1;
 	init_esc();
@@ -103,6 +104,7 @@ void loop()
 	armingLoop();
 	imu_caculate();
 	command.readSerial();
+	
 	
 	rollSp=RX[AIL]/3;
 	
@@ -126,17 +128,29 @@ void loop()
 	}
 	delay(2);
 	
+	#ifdef OUT_RX
+	EVERYMS(100)
+	{
+		for (int i=0; i<4; i++)
+		{
+			Serial1.print(RX[i]); Serial1.print("\t");
+		
+		}
+		Serial1.print("\n");
+	}
+	#endif
+	
 	#ifdef OUT_GRAPH
-	Serial1.print(0); Serial1.print("\t");
-	Serial1.print(0); Serial1.print("\t");
-	Serial1.print(0); Serial1.print("\t");
-	Serial1.print(kalAngleX); Serial1.print("\t");
-	Serial1.print("\t");
-	Serial1.print(0); Serial1.print("\t");
-	Serial1.print(0); Serial1.print("\t");
-	Serial1.print(0); Serial1.print("\t");
-	Serial1.print(kalAngleY); Serial1.print("\t");
-	Serial1.print("\r\n");
+	Serial.print(0); Serial.print("\t");
+	Serial.print(0); Serial.print("\t");
+	Serial.print(0); Serial.print("\t");
+	Serial.print(kalAngleX); Serial.print("\t");
+	Serial.print("\t");
+	Serial.print(0); Serial.print("\t");
+	Serial.print(0); Serial.print("\t");
+	Serial.print(0); Serial.print("\t");
+	Serial.print(kalAngleY); Serial.print("\t");
+	Serial.print("\r\n");
 	#endif
 
 }
