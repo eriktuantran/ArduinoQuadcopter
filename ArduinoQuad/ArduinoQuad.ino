@@ -1,40 +1,52 @@
 #include <Servo.h>
 #include <Wire.h>
+#include <avr/wdt.h>
+#include "global.h"
+#include "misc.h"
 #include "PinChangeInt.h"
 #include "Kalman.h"
-#include "global.h"
 #include "PID_v1.h"
 #include "SerialCommand.h"
 
-
-#define ROLL_P 0.848
-#define ROLL_I 0.011
-#define ROLL_D 0.661
-#define ROLL_MAX_MOTOR_BALANCE_SPEED 7                  // max amount of thrust that will be applied to balance this axis
-#define ROLL_PID_OUTPUT 50
-#define ROLL_ERROR_CORRECTION 0
-
-state_t State;
 extern uint8_t RX_good;
 extern double kalAngleX;
 extern double kalAngleY;
 extern int16_t RX[4];
 
+state_t State;
 SerialCommand command;
+struct PID_DATA pidData;
 
 //PID area
-double rollSp = 0;              // setpoints
-double bal_roll= 0;             // motor balances can vary between -100 & 100, motor balance between axes -100:ac , +100:bd
-double pitch, roll, yaw  = 0.0;	// angles in degrees
-PID rollReg(&kalAngleX, &bal_roll, &rollSp, ROLL_P, ROLL_I, ROLL_D, DIRECT);
+#define ROLL_P 0.2
+#define ROLL_I 0.0
+#define ROLL_D 0.0
+#define ROLL_MAX_MOTOR_BALANCE_SPEED 7                  // max amount of thrust that will be applied to balance this axis
+#define ROLL_PID_OUTPUT 50
+#define ROLL_ERROR_CORRECTION 0
+
+#define PITCH_P 0.848
+#define PITCH_I 0.011
+#define PITCH_D 0.661
+#define PITCH_MAX_MOTOR_BALANCE_SPEED 7                  // max amount of thrust that will be applied to balance this axis
+#define PITCH_PID_OUTPUT 50
+#define PITCH_ERROR_CORRECTION 0
+
+double rollSp, pitchSp = 0;            // setpoint
+double rollOut, pitchOut = 0;        // PID OUTPUT
+PID rollReg(&kalAngleX, &rollOut, &rollSp, ROLL_P, ROLL_I, ROLL_D, DIRECT);
+PID pitchReg(&kalAngleY, &pitchOut, &pitchSp, PITCH_P, PITCH_I, PITCH_D, DIRECT);
 
 void init_pid()
 {
 	rollReg.SetMode(AUTOMATIC);
 	rollReg.SetOutputLimits(-ROLL_PID_OUTPUT, ROLL_PID_OUTPUT);
 	rollReg.SetSampleTime(14);
+	
+	pitchReg.SetMode(AUTOMATIC);
+	pitchReg.SetOutputLimits(-PITCH_PID_OUTPUT, PITCH_PID_OUTPUT);
+	pitchReg.SetSampleTime(14);
 }
-
 static void checkState()
 {
 	State.ThrottleOff = RX[THR] < THROTTLE_OFF;
@@ -49,14 +61,16 @@ void arm(uint8_t value)
 	if (value && !State.Armed)
 	{
 		State.Armed = ON;
-		LED = ON;
-		rollReg.Reset();
+		digitalWrite(LED_PIN,HIGH);
+		//	pid_Reset_Integrator()
+		//rollReg.Reset();
+		reset_pid_other();
 		
 	}
 	else if (!value && State.Armed)
 	{
 		State.Armed = OFF;
-		LED = OFF;
+		digitalWrite(LED_PIN,LOW);
 	}
 }
 
@@ -85,18 +99,35 @@ void armingLoop()
 	}
 }
 
-void setup() {
+
+#define K_P     0.50
+#define K_I     0.00
+#define K_D     0.00
+
+
+void setup()
+{
+	MCUSR = 0;
+	wdt_disable();
 	Serial.begin(115200);
-	Serial1.begin(115200);
-	LED_DIR=1;
+	Serial1.begin(9600);
+	pinMode(LED_PIN,OUTPUT);digitalWrite(BUZZ_PIN,LOW);
+	pinMode(BUZZ_PIN,OUTPUT); digitalWrite(BUZZ_PIN,HIGH);
 	init_esc();
 	init_imu();
 	init_receiver();
-	init_pid();
+	//init_pid();
 	init_command();
-	Serial1.println("init success");
+	//pid_Init(K_P * SCALING_FACTOR, K_I * SCALING_FACTOR , K_D * SCALING_FACTOR , &pidData);
+	Serial1.println("Init success");
 }
 uint16_t motor_pwm[5];
+uint16_t offset = 30;
+int16_t pid_roll_out=0;
+extern float pid_output_roll;
+extern float pid_output_pitch;
+extern float pid_output_yaw;
+extern float pid_roll_setpoint;
 void loop()
 {
 	rxRead();
@@ -105,21 +136,62 @@ void loop()
 	imu_caculate();
 	command.readSerial();
 	
+	pid_roll_setpoint=RX[AIL]/5;
 	
-	rollSp=RX[AIL]/3;
-	
-	if(rollReg.Compute())
+	EVERYMS(20)
 	{
-		if (RX[THR] >25) RX[THR]=25;
+		calculate_pid();
+		if (RX[THR] > 30) RX[THR] = 30;
+		motor_pwm[3] = PWM_LOW + offset + pid_output_pitch + pid_output_roll - pid_output_yaw; //Calculate the pulse for esc 1 (front-right - CCW)
+		motor_pwm[4] = PWM_LOW + offset - pid_output_pitch + pid_output_roll + pid_output_yaw; //Calculate the pulse for esc 2 (rear-right - CW)
+		motor_pwm[1] = PWM_LOW + offset - pid_output_pitch - pid_output_roll - pid_output_yaw; //Calculate the pulse for esc 3 (rear-left - CCW)
+		motor_pwm[2] = PWM_LOW + offset + pid_output_pitch - pid_output_roll + pid_output_yaw; //Calculate the pulse for esc 4 (front-left - CW)
 		
-		motor_pwm[2] = PWM_LOW + RX[THR]*2 + bal_roll;
-		motor_pwm[4] = PWM_LOW + RX[THR]*2 - bal_roll;
-		//Serial1.print(bal_roll*2); Serial1.print("\n");
+		 if (motor_pwm[1] < PWM_LOW) motor_pwm[1] = PWM_LOW;                                         //Keep the motors running.
+		 if (motor_pwm[2] < PWM_LOW) motor_pwm[2] = PWM_LOW;                                         //Keep the motors running.
+		 if (motor_pwm[3] < PWM_LOW) motor_pwm[3] = PWM_LOW;                                         //Keep the motors running.
+		 if (motor_pwm[4] < PWM_LOW) motor_pwm[4] = PWM_LOW;                                         //Keep the motors running.
+		 
+		 if(motor_pwm[1] > PWM_MID)motor_pwm[1] = PWM_MID ;                                          //Limit the esc-1 pulse to 2000us.
+		 if(motor_pwm[2] > PWM_MID)motor_pwm[2] = PWM_MID;                                           //Limit the esc-2 pulse to 2000us.
+		 if(motor_pwm[3] > PWM_MID)motor_pwm[3] = PWM_MID;                                           //Limit the esc-3 pulse to 2000us.
+		 if(motor_pwm[4] > PWM_MID)motor_pwm[4] = PWM_MID;                                           //Limit the esc-4 pulse to 2000us.
 	}
+	
+	//EVERYMS(20)
+	//{
+	//RX[THR] = 10;
+	//
+	//pid_roll_out = pid_Controller(rollSp, kalAngleX, &pidData);
+	//motor_pwm[1] = PWM_LOW + offset + pid_roll_out;
+	//motor_pwm[2] = PWM_LOW + offset + pid_roll_out;
+	//motor_pwm[3] = PWM_LOW + offset - pid_roll_out;
+	//motor_pwm[4] = PWM_LOW + offset - pid_roll_out;
+	//
+	//}
+	//if(rollReg.Compute())
+	//{
+	////	if (RX[THR] >40) RX[THR]=40;
+	//RX[THR]=40;
+	//motor_pwm[1] = PWM_LOW + offset + rollOut;
+	//motor_pwm[2] = PWM_LOW + offset + rollOut;
+	//motor_pwm[3] = PWM_LOW + offset - rollOut;
+	//motor_pwm[4] = PWM_LOW + offset - rollOut;
+	//}
+	//if(pitchReg.Compute())
+	//{
+	//if (RX[THR] >25) RX[THR]=25;
+	
+	//motor_pwm[2] = PWM_LOW + RX[THR]*2 + pitchOut;
+	//motor_pwm[4] = PWM_LOW + RX[THR]*2 - pitchOut;
+	//Serial1.print(bal_roll*2); Serial1.print("\n");
+	//}
 	
 	if (State.Armed && !State.ThrottleOff)
 	{
+		pwmWrite(1,motor_pwm[1]);
 		pwmWrite(2,motor_pwm[2]);
+		pwmWrite(3,motor_pwm[3]);
 		pwmWrite(4,motor_pwm[4]);
 	}
 	else
@@ -128,13 +200,25 @@ void loop()
 	}
 	delay(2);
 	
+	#ifdef OUT_MOTOR
+	EVERYMS(100)
+	{
+		for (int i=0; i<4; i++)
+		{
+			Serial1.print(motor_pwm[i+1]); Serial1.print("\t");
+			
+		}
+		Serial1.print("\n");
+	}
+	#endif
+	
 	#ifdef OUT_RX
 	EVERYMS(100)
 	{
 		for (int i=0; i<4; i++)
 		{
 			Serial1.print(RX[i]); Serial1.print("\t");
-		
+			
 		}
 		Serial1.print("\n");
 	}

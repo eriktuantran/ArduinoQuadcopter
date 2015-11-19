@@ -30,6 +30,11 @@ void init_command();
 void unrecognized();
 void LED_on();
 void LED_off();
+void soft_reset();
+void arm_control();
+void thr_control();
+void imu_angle();
+void setMax();
 void setP();
 void setI();
 void setD();
@@ -38,6 +43,17 @@ uint8_t i2cWrite(uint8_t registerAddress, uint8_t *data, uint8_t length, bool se
 uint8_t i2cRead(uint8_t registerAddress, uint8_t *data, uint8_t nbytes);
 void init_imu();
 void imu_caculate();
+void pid_Init(int16_t p_factor, int16_t i_factor, int16_t d_factor, struct PID_DATA *pid);
+void pidSetP(int16_t p_factor,struct PID_DATA *pid);
+void pidSetI(int16_t i_factor,struct PID_DATA *pid);
+void pidSetD(int16_t d_factor,struct PID_DATA *pid);
+int16_t pid_Controller(int16_t setPoint, int16_t processValue, struct PID_DATA *pid_st);
+void pid_Reset_Integrator(pidData_t *pid_st);
+void PID_other_setP(float p);
+void PID_other_setI(float i);
+void PID_other_setD(float d);
+void reset_pid_other();
+void calculate_pid();
 int16_t limit(int16_t value, int16_t low, int16_t high);
 void changeThrottle(int throttle);
 int readThrottle();
@@ -60,7 +76,8 @@ void rxRead();
 #include <I2C.ino>
 #include <IMU.ino>
 #include <Kalman.h>
-#include <MISC.ino>
+#include <PID.ino>
+#include <PID_other.ino>
 #include <PID_v1.cpp>
 #include <PID_v1.h>
 #include <PWM.ino>
@@ -69,3 +86,5 @@ void rxRead();
 #include <SerialCommand.cpp>
 #include <SerialCommand.h>
 #include <global.h>
+#include <misc.h>
+#include <pid.h>

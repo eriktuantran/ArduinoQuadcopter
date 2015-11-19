@@ -10,7 +10,8 @@
 #define GLOBAL_H_
 
 #define OUT_GRAPH
-#define OUT_RX
+//#define OUT_RX
+//#define OUT_MOTOR
 
 #define ON		1
 #define OFF		0
@@ -19,6 +20,7 @@
 #define maxPulseRate        2000
 #define PWM_MIN				1000
 #define PWM_LOW				1145
+#define PWM_MID				1200
 #define PWM_MAX				2000
 #define throttleChangeDelay 50
 
@@ -53,6 +55,25 @@ typedef struct
 	uint8_t Error;
 } state_t;
 
+
+#define SCALING_FACTOR  128
+typedef struct PID_DATA{
+	//! Last process value, used to find derivative of process value.
+	int16_t lastProcessValue;
+	//! Summation of errors, used for integrate calculations
+	int32_t sumError;
+	//! The Proportional tuning constant, multiplied with SCALING_FACTOR
+	int16_t P_Factor;
+	//! The Integral tuning constant, multiplied with SCALING_FACTOR
+	int16_t I_Factor;
+	//! The Derivative tuning constant, multiplied with SCALING_FACTOR
+	int16_t D_Factor;
+	//! Maximum allowed error, avoid overflow
+	int16_t maxError;
+	//! Maximum allowed sumerror, avoid overflow
+	int32_t maxSumError;
+} pidData_t;
+
 typedef struct
 {
 	unsigned int bit0 : 1;
@@ -68,17 +89,10 @@ typedef struct
 #define _REG_BIT2(r,b)	((*(_bitreg8*)&r).bit ## b)
 #define _REG_BIT(r,b)	_REG_BIT2(r,b)
 
-#define OUTPUT		1
-#define INPUT		0
-/// LED
-#define LED_PORT	PORTB
-#define LED_DDR		DDRB
-#define LED_PIN		PINB
-#define LED_BIT		3
-#define LED			_REG_BIT(LED_PORT, LED_BIT)
-#define LED_DIR		_REG_BIT(LED_DDR, LED_BIT)
-#define LED_TOGGLE	(_REG_BIT(LED_PIN, LED_BIT) = 1)
-#define LED_BLINK	(((LED_PORT>>LED_BIT)&0x1) == 0x1) ? (cbi(LED_PORT,LED_BIT)):(sbi(LED_PORT,LED_BIT))
+/// LED BUZZ
+#define LED_PIN		3
+#define BUZZ_PIN	1
+#define BLINK(pin)	(digitalRead(pin)) ? (digitalWrite(pin,LOW)):(digitalWrite(pin,HIGH))
 
 #define RX_THRESHOLD		50		// was 75 [10/14/2015 QuocTuanIT]
 #define ARM_DELAY			500	// in ms

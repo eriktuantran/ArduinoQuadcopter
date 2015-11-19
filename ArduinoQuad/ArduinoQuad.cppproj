@@ -5,7 +5,7 @@
     <ProjectVersion>6.2</ProjectVersion>
     <ToolchainName>com.Atmel.AVRGCC8.CPP</ToolchainName>
     <ProjectGuid>{85addabe-fe30-4015-90ea-9a4ab7568030}</ProjectGuid>
-    <avrdevice>atmega644</avrdevice>
+    <avrdevice>atmega644p</avrdevice>
     <avrdeviceseries>none</avrdeviceseries>
     <OutputType>Executable</OutputType>
     <Language>CPP</Language>
@@ -51,7 +51,8 @@
   <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
   <avrgcc.compiler.symbols.DefSymbols>
     <ListValues>
-      <Value>__AVR_ATmega644__</Value>
+      <Value>__AVR_ATmega644p__</Value>
+      <Value>__AVR_ATmega644P__</Value>
       <Value>ARDUINO=165</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=20000000L</Value>
@@ -86,7 +87,8 @@
   <avrgcccpp.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcccpp.compiler.general.ChangeDefaultBitFieldUnsigned>
   <avrgcccpp.compiler.symbols.DefSymbols>
     <ListValues>
-      <Value>__AVR_ATmega644__</Value>
+      <Value>__AVR_ATmega644p__</Value>
+      <Value>__AVR_ATmega644P__</Value>
       <Value>ARDUINO=165</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=20000000L</Value>
@@ -123,7 +125,7 @@
     <VMSETTING_IncludePaths>C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino;C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard;../../ArduinoQuad;C:/Program Files (x86)/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries;C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers;C:/Users/QuocTuanIT/Documents/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/;C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/;C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/utility;C:/Program Files (x86)/Arduino/libraries/SoftPWM;C:/Program Files (x86)/Arduino/libraries/SoftPWM/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/sanguino;C:/Program Files (x86)/Arduino/libraries/Servo/src;C:/Program Files (x86)/Arduino/libraries/Servo/src/utility;</VMSETTING_IncludePaths>
     <VisualMicroSettings>
       <VisualMicroSettings>
-        <arduino.upload.port>COM1</arduino.upload.port>
+        <arduino.upload.port>COM3</arduino.upload.port>
         <arduino.board.name>atmega644</arduino.board.name>
         <arduino.board.desc>Sanguino W/ ATmega644 or ATmega644A (20 MHz)</arduino.board.desc>
         <arduino.board.property_bag>name=Sanguino W/ ATmega644 or ATmega644A (20 MHz)
@@ -288,7 +290,8 @@ build.arch=AVR
   <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
   <avrgcc.compiler.symbols.DefSymbols>
     <ListValues>
-      <Value>__AVR_ATmega644__</Value>
+      <Value>__AVR_ATmega644p__</Value>
+      <Value>__AVR_ATmega644P__</Value>
       <Value>ARDUINO=165</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=20000000L</Value>
@@ -323,7 +326,8 @@ build.arch=AVR
   <avrgcccpp.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcccpp.compiler.general.ChangeDefaultBitFieldUnsigned>
   <avrgcccpp.compiler.symbols.DefSymbols>
     <ListValues>
-      <Value>__AVR_ATmega644__</Value>
+      <Value>__AVR_ATmega644p__</Value>
+      <Value>__AVR_ATmega644P__</Value>
       <Value>ARDUINO=165</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=20000000L</Value>
@@ -360,7 +364,7 @@ build.arch=AVR
     <VMSETTING_IncludePaths>C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino;C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard;../../ArduinoQuad;C:/Program Files (x86)/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries;C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers;C:/Users/QuocTuanIT/Documents/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/;C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/;C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/utility;C:/Program Files (x86)/Arduino/libraries/SoftPWM;C:/Program Files (x86)/Arduino/libraries/SoftPWM/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/sanguino;C:/Program Files (x86)/Arduino/libraries/Servo/src;C:/Program Files (x86)/Arduino/libraries/Servo/src/utility;</VMSETTING_IncludePaths>
     <VisualMicroSettings>
       <VisualMicroSettings>
-        <arduino.upload.port>COM1</arduino.upload.port>
+        <arduino.upload.port>COM3</arduino.upload.port>
         <arduino.board.name>atmega644</arduino.board.name>
         <arduino.board.desc>Sanguino W/ ATmega644 or ATmega644A (20 MHz)</arduino.board.desc>
         <arduino.board.property_bag>name=Sanguino W/ ATmega644 or ATmega644A (20 MHz)

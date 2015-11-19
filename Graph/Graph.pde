@@ -26,7 +26,7 @@ boolean drawValues  = false;
 void setup() {
   size(width, height);
   println(Serial.list()); // Use this to print connected serial devices
-  serial = new Serial(this, Serial.list()[0], 115200); // Set this to your serial port obtained using the line above
+  serial = new Serial(this, "COM3", 115200); // Set this to your serial port obtained using the line above
   serial.bufferUntil('\n'); // Buffer until line feed
 
   for (int i = 0; i < width; i++) { // center all variables

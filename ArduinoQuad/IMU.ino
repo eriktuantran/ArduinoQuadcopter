@@ -123,17 +123,18 @@ void imu_caculate()
 	kalAngleX = kalmanX.getAngle(roll, gyroXrate, dt); // Calculate the angle using a Kalman filter
 	#endif
 
-	gyroXangle += gyroXrate * dt; // Calculate gyro angle without any filter
-	gyroYangle += gyroYrate * dt;
+	//gyroXangle += gyroXrate * dt; // Calculate gyro angle without any filter
+	//gyroYangle += gyroYrate * dt;
 	//gyroXangle += kalmanX.getRate() * dt; // Calculate gyro angle using the unbiased rate
 	//gyroYangle += kalmanY.getRate() * dt;
 
-	compAngleX = 0.93 * (compAngleX + gyroXrate * dt) + 0.07 * roll; // Calculate the angle using a Complimentary filter
-	compAngleY = 0.93 * (compAngleY + gyroYrate * dt) + 0.07 * pitch;
+	//compAngleX = 0.93 * (compAngleX + gyroXrate * dt) + 0.07 * roll; // Calculate the angle using a Complimentary filter
+	//compAngleY = 0.93 * (compAngleY + gyroYrate * dt) + 0.07 * pitch;
 
 	// Reset the gyro angle when it has drifted too much
-	if (gyroXangle < -180 || gyroXangle > 180)
+/*	if (gyroXangle < -180 || gyroXangle > 180)
 	gyroXangle = kalAngleX;
 	if (gyroYangle < -180 || gyroYangle > 180)
 	gyroYangle = kalAngleY;
+*/
 }
