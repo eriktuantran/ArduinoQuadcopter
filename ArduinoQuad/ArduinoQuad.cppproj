@@ -125,7 +125,7 @@
     <VMSETTING_IncludePaths>C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino;C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard;../../ArduinoQuad;C:/Program Files (x86)/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries;C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers;C:/Users/QuocTuanIT/Documents/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/;C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/;C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/utility;C:/Program Files (x86)/Arduino/libraries/SoftPWM;C:/Program Files (x86)/Arduino/libraries/SoftPWM/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/sanguino;C:/Program Files (x86)/Arduino/libraries/Servo/src;C:/Program Files (x86)/Arduino/libraries/Servo/src/utility;</VMSETTING_IncludePaths>
     <VisualMicroSettings>
       <VisualMicroSettings>
-        <arduino.upload.port>COM3</arduino.upload.port>
+        <arduino.upload.port>COM1</arduino.upload.port>
         <arduino.board.name>atmega644</arduino.board.name>
         <arduino.board.desc>Sanguino W/ ATmega644 or ATmega644A (20 MHz)</arduino.board.desc>
         <arduino.board.property_bag>name=Sanguino W/ ATmega644 or ATmega644A (20 MHz)
@@ -364,7 +364,7 @@ build.arch=AVR
     <VMSETTING_IncludePaths>C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino;C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard;../../ArduinoQuad;C:/Program Files (x86)/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries;C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers;C:/Users/QuocTuanIT/Documents/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/;C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/;C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/utility;C:/Program Files (x86)/Arduino/libraries/SoftPWM;C:/Program Files (x86)/Arduino/libraries/SoftPWM/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/sanguino;C:/Program Files (x86)/Arduino/libraries/Servo/src;C:/Program Files (x86)/Arduino/libraries/Servo/src/utility;</VMSETTING_IncludePaths>
     <VisualMicroSettings>
       <VisualMicroSettings>
-        <arduino.upload.port>COM3</arduino.upload.port>
+        <arduino.upload.port>COM1</arduino.upload.port>
         <arduino.board.name>atmega644</arduino.board.name>
         <arduino.board.desc>Sanguino W/ ATmega644 or ATmega644A (20 MHz)</arduino.board.desc>
         <arduino.board.property_bag>name=Sanguino W/ ATmega644 or ATmega644A (20 MHz)
@@ -529,6 +529,9 @@ build.arch=AVR
     <Compile Include="Kalman.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="misc.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="PID_v1.cpp">
       <SubType>compile</SubType>
     </Compile>
@@ -561,7 +564,10 @@ build.arch=AVR
     <None Include="IMU.ino">
       <SubType>compile</SubType>
     </None>
-    <None Include="MISC.ino">
+    <None Include="PID.ino">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="PID_other.ino">
       <SubType>compile</SubType>
     </None>
     <None Include="PWM.ino">

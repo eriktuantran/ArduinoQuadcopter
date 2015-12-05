@@ -20,7 +20,7 @@
 #define maxPulseRate        2000
 #define PWM_MIN				1000
 #define PWM_LOW				1145
-#define PWM_MID				1200
+#define PWM_MID				1300
 #define PWM_MAX				2000
 #define throttleChangeDelay 50
 

@@ -141,21 +141,26 @@ void loop()
 	EVERYMS(20)
 	{
 		calculate_pid();
+		
 		if (RX[THR] > 30) RX[THR] = 30;
 		motor_pwm[3] = PWM_LOW + offset + pid_output_pitch + pid_output_roll - pid_output_yaw; //Calculate the pulse for esc 1 (front-right - CCW)
 		motor_pwm[4] = PWM_LOW + offset - pid_output_pitch + pid_output_roll + pid_output_yaw; //Calculate the pulse for esc 2 (rear-right - CW)
 		motor_pwm[1] = PWM_LOW + offset - pid_output_pitch - pid_output_roll - pid_output_yaw; //Calculate the pulse for esc 3 (rear-left - CCW)
 		motor_pwm[2] = PWM_LOW + offset + pid_output_pitch - pid_output_roll + pid_output_yaw; //Calculate the pulse for esc 4 (front-left - CW)
 		
-		 if (motor_pwm[1] < PWM_LOW) motor_pwm[1] = PWM_LOW;                                         //Keep the motors running.
-		 if (motor_pwm[2] < PWM_LOW) motor_pwm[2] = PWM_LOW;                                         //Keep the motors running.
-		 if (motor_pwm[3] < PWM_LOW) motor_pwm[3] = PWM_LOW;                                         //Keep the motors running.
-		 if (motor_pwm[4] < PWM_LOW) motor_pwm[4] = PWM_LOW;                                         //Keep the motors running.
-		 
-		 if(motor_pwm[1] > PWM_MID)motor_pwm[1] = PWM_MID ;                                          //Limit the esc-1 pulse to 2000us.
-		 if(motor_pwm[2] > PWM_MID)motor_pwm[2] = PWM_MID;                                           //Limit the esc-2 pulse to 2000us.
-		 if(motor_pwm[3] > PWM_MID)motor_pwm[3] = PWM_MID;                                           //Limit the esc-3 pulse to 2000us.
-		 if(motor_pwm[4] > PWM_MID)motor_pwm[4] = PWM_MID;                                           //Limit the esc-4 pulse to 2000us.
+		for (int i=1; i<=4; i++)
+		{
+			motor_pwm[i]=motor_pwm[i] + motor_pwm[i]*RX[THR]/500;
+		}
+		if (motor_pwm[1] < PWM_LOW) motor_pwm[1] = PWM_LOW;                                         //Keep the motors running.
+		if (motor_pwm[2] < PWM_LOW) motor_pwm[2] = PWM_LOW;                                         //Keep the motors running.
+		if (motor_pwm[3] < PWM_LOW) motor_pwm[3] = PWM_LOW;                                         //Keep the motors running.
+		if (motor_pwm[4] < PWM_LOW) motor_pwm[4] = PWM_LOW;                                         //Keep the motors running.
+		
+		if(motor_pwm[1] > PWM_MID)motor_pwm[1] = PWM_MID ;                                          //Limit the esc-1 pulse to 2000us.
+		if(motor_pwm[2] > PWM_MID)motor_pwm[2] = PWM_MID;                                           //Limit the esc-2 pulse to 2000us.
+		if(motor_pwm[3] > PWM_MID)motor_pwm[3] = PWM_MID;                                           //Limit the esc-3 pulse to 2000us.
+		if(motor_pwm[4] > PWM_MID)motor_pwm[4] = PWM_MID;                                           //Limit the esc-4 pulse to 2000us.
 	}
 	
 	//EVERYMS(20)
@@ -224,18 +229,7 @@ void loop()
 	}
 	#endif
 	
-	#ifdef OUT_GRAPH
-	Serial.print(0); Serial.print("\t");
-	Serial.print(0); Serial.print("\t");
-	Serial.print(0); Serial.print("\t");
-	Serial.print(kalAngleX); Serial.print("\t");
-	Serial.print("\t");
-	Serial.print(0); Serial.print("\t");
-	Serial.print(0); Serial.print("\t");
-	Serial.print(0); Serial.print("\t");
-	Serial.print(kalAngleY); Serial.print("\t");
-	Serial.print("\r\n");
-	#endif
+	
 
 }
 

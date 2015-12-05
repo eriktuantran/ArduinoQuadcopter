@@ -137,4 +137,21 @@ void imu_caculate()
 	if (gyroYangle < -180 || gyroYangle > 180)
 	gyroYangle = kalAngleY;
 */
+
+
+#ifdef OUT_GRAPH
+Serial.print(roll); Serial.print("\t");
+Serial.print(0); Serial.print("\t");
+Serial.print(0); Serial.print("\t");
+Serial.print(kalAngleX); Serial.print("\t");
+Serial.print("\t");
+Serial.print(0); Serial.print("\t");
+Serial.print(0); Serial.print("\t");
+Serial.print(0); Serial.print("\t");
+Serial.print(0); Serial.print("\t");
+Serial.print("\r\n");
+#endif
+
+
+
 }
